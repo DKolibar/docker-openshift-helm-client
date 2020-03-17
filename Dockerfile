@@ -31,6 +31,6 @@ RUN chmod +x "/usr/local/bin/kubectl"
 COPY --from=builder "~/download/openshift-origin-client-tools-v3.6.1-008f2d5-linux-64bit/oc" "/usr/local/bin/oc"
 RUN chmod +x "/usr/local/bin/oc"
 
-RUN helm --version
+RUN helm version
 
 CMD [ "helm" ]
