@@ -1,7 +1,7 @@
 FROM ubuntu:16.04 as builder
 
 ARG OC_CLI_SOURCE="https://github.com/openshift/origin/releases/download/v3.6.1/openshift-origin-client-tools-v3.6.1-008f2d5-linux-64bit.tar.gz"
-ARG HELM_CLIENT_SOURCE="https://storage.googleapis.com/kubernetes-helm/helm-v2.14.1-linux-amd64.tar.gz"
+ARG HELM_CLIENT_SOURCE="https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz"
 ARG KUBECTL_SOURCE="https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64/kubectl"
 
 ENV WORKDIR="~/download"
