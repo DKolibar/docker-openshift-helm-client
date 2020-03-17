@@ -1,8 +1,7 @@
 FROM ubuntu:16.04 as builder
 
 ARG OC_CLI_SOURCE="https://github.com/openshift/origin/releases/download/v3.6.1/openshift-origin-client-tools-v3.6.1-008f2d5-linux-64bit.tar.gz"
-ARG HELM3_CLIENT_SOURCE="https://get.helm.sh/helm-v3.1.2-linux-amd64.tar.gz"
-ARG HELM2_CLIENT_SOURCE="https://storage.googleapis.com/kubernetes-helm/helm-v2.14.1-linux-amd64.tar.gz"
+ARG HELM_CLIENT_SOURCE="https://storage.googleapis.com/kubernetes-helm/helm-v2.14.1-linux-amd64.tar.gz"
 ARG KUBECTL_SOURCE="https://storage.googleapis.com/kubernetes-release/release/v1.10.0/bin/linux/amd64/kubectl"
 
 ENV WORKDIR="~/download"
@@ -17,18 +16,14 @@ RUN touch oc_cli.tar.gz && \
     curl -SsL --retry 5 -o oc_cli.tar.gz  $OC_CLI_SOURCE && \
     tar xf oc_cli.tar.gz
 
-RUN curl -SsL --retry 5 $HELM3_CLIENT_SOURCE | tar xz
+RUN curl -SsL --retry 5 $HELM_CLIENT_SOURCE | tar xz
+
 
 FROM phusion/baseimage:0.10.0
 MAINTAINER Kevin Sandermann <kevin.sandermann@gmail.com>
 
-COPY --from=builder "~/download/linux-amd64/helm" "/usr/local/bin/helm3"
-RUN chmod +x "/usr/local/bin/helm3"
-
-RUN curl -SsL --retry 5 $HELM2_CLIENT_SOURCE | tar xz
-
-COPY --from=builder "~/download/linux-amd64/helm" "/usr/local/bin/helm2"
-RUN chmod +x "/usr/local/bin/helm2"
+COPY --from=builder "~/download/linux-amd64/helm" "/usr/local/bin/helm"
+RUN chmod +x "/usr/local/bin/helm"
 
 COPY --from=builder "~/download/kubectl" "/usr/local/bin/kubectl"
 RUN chmod +x "/usr/local/bin/kubectl"
@@ -36,7 +31,6 @@ RUN chmod +x "/usr/local/bin/kubectl"
 COPY --from=builder "~/download/openshift-origin-client-tools-v3.6.1-008f2d5-linux-64bit/oc" "/usr/local/bin/oc"
 RUN chmod +x "/usr/local/bin/oc"
 
-RUN helm3 version
-RUN helm2 init --client-only
+RUN helm init --client-only
 
-CMD [ "helm3" ]
+CMD [ "helm" ]
